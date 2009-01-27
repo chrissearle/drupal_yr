@@ -1,0 +1,49 @@
+<?php
+/**
+ * Implementation of hook_help().
+ */
+function yr_help($path, $arg) {
+  switch ($path) {
+    case 'admin/modules#description':
+      return t('Configure which fields yr.no should read for location.');
+  }
+}
+
+/**
+ * Implementation of hook_block().
+ */
+function yr_block($op = 'list', $delta = 0, $edit = array()) {
+  // The $op parameter determines what piece of information is being requested.
+  switch ($op) {
+    case 'list':
+      // If $op is "list", we just need to return a list of block descriptions.
+      // This is used to provide a list of possible blocks to the administrator,
+      // end users will not see these descriptions.
+      $blocks[0] = array(
+        'info'       => t('Yr weather'),
+      );
+
+      return $blocks;
+    case 'configure':
+      $form = array();
+      return $form;
+
+    case 'view': default:
+      // If $op is "view", then we need to generate the block for display
+      // purposes. The $delta parameter tells us which block is being requested.
+      switch ($delta) {
+        case 0:
+          if (arg(0) == 'node' && arg(1)) {
+            $block['subject'] = t('Weather');
+
+            $node = node_load(arg(1));
+
+            if ($node->field_yr[0]['value']) {
+                $block['content'] = '<script type="text/javascript" src="' . $node->field_yr[0]['value'] . '/ekstern_boks_liten.js"> </script>';
+            }
+          }
+          break;
+      }
+      return $block;
+  }
+}

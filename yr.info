@@ -1,0 +1,5 @@
+name = Yr
+description = "Show a block for yr.no weather"
+core = 6.x
+package = "Other"
+dependencies[] = text
